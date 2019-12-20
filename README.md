@@ -1,4 +1,20 @@
-# com.sdn.lifx-lan2
-Adds LIFX devices support to Homey (over local network)
+# LIFX LANv2
 
-This repository is currently empty. It will host the source code of this app as soon as it is ready for the first publish.
+Adds local network support for LIFX devices to Homey.
+Homey is a product from Athom: https://homey.app
+
+Supports:
+ - Default power consumption values for Homey
+ - Dynamic kelvin ranges for all devices
+ - Firmware effects
+ - Infrared level if supported
+ - Ambient light values
+ - Multizone and Chain devices
+ - Details of all devices in the Homey app
+ - Setting of scenes stored in the LIFX cloud
+
+Does currently not support:
+ - Control of individual Tile panels
+
+Currently Planned:
+ - Power consumption data provided automatically per device type

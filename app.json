@@ -1,0 +1,1440 @@
+{
+  "id": "com.sdn.lifx-lan2",
+  "version": "0.7.0",
+  "compatibility": ">=2.0.0",
+  "sdk": 2,
+  "brandColor": "#450195",
+  "name": {
+    "en": "LIFX (LAN)",
+    "de": "LIFX (LAN)"
+  },
+  "description": {
+    "en": "Adds LIFX devices support to Homey (using local network)",
+    "de": "Fügt LIFX Geräte Unterstützung zu Homey hinzu (über lokales Netzwerk)"
+  },
+  "tags": {
+    "en": [ "smart lights", "LIFX" ],
+    "de": [ "smarte beleuchtung", "LIFX" ]
+	},
+  "contributors": {
+		"developers": [
+			{
+				"name": "Thomas Hebendanz"
+			}
+		],
+		"translators": [
+			{
+        "name": "Thomas Hebendanz"
+			}
+		]
+	},
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "Hebendanz"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/Shakesbeard/com.sdn.lifx-lan2/issues"
+  },
+  "source": "https://github.com/Shakesbeard/com.sdn.lifx-lan2",
+  "support": "mailto:support@strange-domain.net",
+  "category": [
+    "lights"
+  ],
+  "permissions": [],
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
+  },
+  "author": {
+    "name": "Thomas Hebendanz"
+  },
+  "flow": {
+    "triggers": [
+      {
+        "id": "device_gone",
+        "title": {
+          "en": "A light went offline",
+          "de": "Licht ging offline"
+        },
+        "tokens": [
+          {
+            "name": "device_label",
+            "type": "string",
+            "title": {
+              "en": "Lights's Label",
+              "de": "Name der Lichts"
+            },
+            "example": "Kitchen Light"
+          }
+        ]
+      },
+      {
+        "id": "device_back",
+        "title": {
+          "en": "A device came back online",
+          "de": "Gerät kam wieder online"
+        },
+        "tokens": [
+          {
+            "name": "device_label",
+            "type": "string",
+            "title": {
+              "en": "Lights's Label",
+              "de": "Name des Lichts"
+            },
+            "example": "Kitchen Light"
+          }
+        ]
+      },
+      {
+        "id": "specific_device_gone",
+        "title": {
+          "en": "Light went offline",
+          "de": "Licht ging offline"
+        },
+        "tokens": [
+          {
+            "name": "device_label",
+            "type": "string",
+            "title": {
+              "en": "Lights's Label",
+              "de": "Name des Lichts"
+            },
+            "example": "Kitchen Light"
+          }
+        ],
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2"
+          }
+        ]
+      },
+      {
+        "id": "specific_device_back",
+        "title": {
+          "en": "Light came online",
+          "de": "Licht kam online"
+        },
+        "tokens": [
+          {
+            "name": "device_label",
+            "type": "string",
+            "title": {
+              "en": "Light's Label",
+              "de": "Name des Lichts"
+            },
+            "example": "Kitchen Light"
+          }
+        ],
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2"
+          }
+        ]
+      },
+      {
+        "id": "specific_device_flux_changed",
+        "title": {
+          "en": "Ambient Light Level Changed",
+          "de": "Umgebungslicht hat sich geändert"
+        },
+        "tokens": [
+          {
+            "name": "device_label",
+            "type": "string",
+            "title": {
+              "en": "Light's Label",
+              "de": "Name des Lichts"
+            },
+            "example": "Kitchen Light"
+          },
+          {
+            "name": "device_flux_level_new",
+            "type": "number",
+            "title": {
+              "en": "New Ambient Light Level (In Flux)",
+              "de": "Neuer Umgebungslicht Wert (In Flux)"
+            },
+            "example": 10
+          },
+          {
+            "name": "device_flux_level_old",
+            "type": "number",
+            "title": {
+              "en": "Previous Ambient Light Level (In Flux)",
+              "de": "Vorheriger Umgebungslicht Wert (In Flux)"
+            },
+            "example": 10
+          }
+        ],
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2"
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_irMax",
+        "title": {
+          "en": "Set infrared maximum intensity",
+          "de": "Neuen Maximalwert für Infrarot setzen"
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2&capabilities=infrared_max_level"
+          },
+          {
+            "type": "number",
+            "name": "new_max_ir",
+            "title": {
+              "en": "New IR Max Intensity",
+              "de": "Neuer Infrarot Wert"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "set_color_by_hex",
+        "duration": true,
+        "title": {
+          "en": "Set color using rgb hex code",
+          "de": "Farbe per rgb hex code setzen"
+        },
+        "hint": {
+          "en": "Useful if you have rgb hex info on tags.",
+          "de": "Nützlich wenn man RGB Hex Codes in Tags nutzen möchte."
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2&capabilities=light_hue"
+          },
+          {
+            "type": "text",
+            "name": "hex_code",
+            "title": {
+              "en": "RGB Hex Code",
+              "de": "RGB Hex Code"
+            },
+            "placeholder": {
+              "en": "Example: #ff0000",
+              "de": "Beispiel: #ff0000"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set_multizone_basic_6",
+        "duration": true,
+        "title": {
+          "en": "Simple Set Multizone (6 Zones)",
+          "de": "Einfaches Multiple Zonen Setzen (6 Zonen)"
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2&capabilities=multiple_zones"
+          },
+          {
+            "type": "color",
+            "name": "color1",
+            "title": {
+              "en": "Color 1",
+              "de": "1te Farbe"
+            }
+          },
+          {
+            "type": "color",
+            "name": "color2",
+            "title": {
+              "en": "Color 2",
+              "de": "2te Farbe"
+            }
+          },
+          {
+            "type": "color",
+            "name": "color3",
+            "title": {
+              "en": "Color 3",
+              "de": "3te Farbe"
+            }
+          },
+          {
+            "type": "color",
+            "name": "color4",
+            "title": {
+              "en": "Color 4",
+              "de": "4te Farbe"
+            }
+          },
+          {
+            "type": "color",
+            "name": "color5",
+            "title": {
+              "en": "Color 5",
+              "de": "5te Farbe"
+            }
+          },
+          {
+            "type": "color",
+            "name": "color6",
+            "title": {
+              "en": "Color 6",
+              "de": "6te Farbe"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set_multizone",
+        "title": {
+          "en": "Set Multizone",
+          "de": "Multiple Zonen Setzen"
+        },
+        "hint": {
+          "en": "Sets zones using datasets separated by ';'. Set example: 0, 50, 50, 2500. (hue[0-360], saturation[0-100], brightness[0-100], kelvin[2500-9000]) or #ff0000. For more see readme.txt/App Store Page.",
+          "de": "Setzt Zonen mit Hilfe von ';' separierten Datensätzen. Datensatz Beispiel: 0, 50, 50, 2500. (Farbton[0-360], Sättigung[0-100], Helligkeit[0-100], Lichttemperatur[2500-9000]) oder #ff0000. Weitere Infos in readme.txt/App Store Seite."
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2&capabilities=multiple_zones"
+          },
+          {
+            "type": "text",
+            "name": "zone_code",
+            "title": {
+              "en": "Zone Code",
+              "de": "Zonen Code"
+            },
+            "placeholder": {
+              "en": "Format: hue,saturation,brightness,kelvin;...",
+              "de": "Format: Farbton,Sättigung,Helligkeit,Lichttemperatur;..."
+            }
+          },
+          {
+            "type": "number",
+            "name": "start_index",
+            "title": {
+              "en": "Zone Start Index (Zero Based)",
+              "de": "Startzone (Null basierter Index)"
+            },
+            "min": 0,
+            "max": 255,
+            "step": 1
+          },
+          {
+            "type": "dropdown",
+            "name": "apply",
+            "title": {
+              "en": "Apply Settings?",
+              "de": "Einstellungen Anwenden?"
+            },
+            "values": [
+              {
+                "id": "Yes",
+                "label": {
+                  "en": "Apply All Pending Settings",
+                  "de": "Alle austehenden Änderungen anwenden"
+                }
+              },
+              {
+                "id": "No",
+                "label": {
+                  "en": "Keep Settings Pending",
+                  "de": "Änderungen schwebend belassen"
+                }
+              }
+            ]
+          }
+        ],
+        "duration": true
+      },
+      {
+        "id": "play_multizone_effect_move",
+        "title": {
+          "en": "Play Multizone Effect: Move",
+          "de": "Spiele Multizonen Effekt: Bewegen"
+        },
+        "hint": {
+          "en": "Depending on the amount of zones you should not make the speed too fast.",
+          "de": "Abhängig von der Anzahl der Zonen sollte die Geschwindigkeit nicht zu schnell eingestellt werden."
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2&capabilities=multiple_zones"
+          },
+          {
+            "type": "number",
+            "name": "speed",
+            "title": {
+              "en": "Effect Speed (in milliseconds)",
+              "de": "Geschwindigkeit des Effekts (in Millisekunden)"
+            },
+            "min": 50,
+            "max": 3600000,
+            "step": 100,
+            "label": {
+              "en": "ms",
+              "de": "ms"
+            }
+          },
+          {
+            "type": "dropdown",
+            "name": "direction",
+            "title": {
+              "en": "Direction",
+              "de": "Richtung"
+            },
+            "values": [
+              {
+                "id": "TOWARDS",
+                "label": {
+                  "en": "Towards Controller",
+                  "de": "Zum Adapter hin"
+                }
+              },
+              {
+                "id": "AWAY",
+                "label": {
+                  "en": "Away From Controller",
+                  "de": "Vom Adapter weg"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "stop_any_multizone_effect",
+        "title": {
+          "en": "Stop Multizone Any Effect",
+          "de": "Multizonen Effekt ausschalten"
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2&capabilities=multiple_zones"
+          }
+        ]
+      },
+      {
+        "id": "play_effect_glow",
+        "title": {
+          "en": "Play Effect: Glow",
+          "de": "Spiele Effekt: Glühen"
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2&capabilities=light_hue"
+          },
+          {
+            "type": "dropdown",
+            "name": "effect_mode",
+            "title": {
+              "en": "Effect Mode",
+              "de": "Modus des Effekts"
+            },
+            "values": [
+              {
+                "id": "SINE",
+                "label": {
+                  "en": "Smooth (Sine)",
+                  "de": "Sanft (Sinus)"
+                }
+              },
+              {
+                "id": "TRIANGLE",
+                "label": {
+                  "en": "Straight (Triangle)",
+                  "de": "Direkt (Dreieck)"
+                }
+              }
+            ]
+          },
+          {
+            "type": "number",
+            "name": "repeats",
+            "title": {
+              "en": "Number Of Repetitions",
+              "de": "Anzahl der Wiederholungen"
+            },
+            "min": 1,
+            "max": 10,
+            "step": 1
+          },
+          {
+            "type": "number",
+            "name": "effect_length",
+            "title": {
+              "en": "Effect Length (in milliseconds)",
+              "de": "Länge des Effekts (in Millisekunden)"
+            },
+            "min": 100,
+            "max": 5000,
+            "step": 10,
+            "label": {
+              "en": "ms",
+              "de": "ms"
+            }
+          },
+          {
+            "type": "color",
+            "name": "effect_color",
+            "title": {
+              "en": "Effect Color",
+              "de": "Farbe des Effekts"
+            }
+          }
+        ]
+      },
+      {
+        "id": "play_effect_saw",
+        "title": {
+          "en": "Play Effect: Saw",
+          "de": "Spiele Effekt: Säge"
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2&capabilities=light_hue"
+          },
+          {
+            "type": "dropdown",
+            "name": "effect_mode",
+            "title": {
+              "en": "Effect Mode",
+              "de": "Modus des Effekts"
+            },
+            "values": [
+              {
+                "id": "HALF_SINE",
+                "label": {
+                  "en": "Smooth (Half-Sine)",
+                  "de": "Sanft (halber Sinus)"
+                }
+              },
+              {
+                "id": "SAW",
+                "label": {
+                  "en": "Straight (Saw)",
+                  "de": "Direkt (Sägeblatt)"
+                }
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "name": "effect_trans",
+            "title": {
+              "en": "Keep Effect Color? (after playing)",
+              "de": "Farbe des Effekts beibehalten? (nach dem Abspielen)"
+            },
+            "values": [
+              {
+                "id": "Yes",
+                "label": {
+                  "en": "No",
+                  "de": "Nein"
+                }
+              },
+              {
+                "id": "No",
+                "label": {
+                  "en": "Yes",
+                  "de": "Ja"
+                }
+              }
+            ]
+          },
+          {
+            "type": "number",
+            "name": "repeats",
+            "title": {
+              "en": "Number Of Repetitions",
+              "de": "Anzahl der Wiederholungen"
+            },
+            "min": 1,
+            "max": 10,
+            "step": 1
+          },
+          {
+            "type": "number",
+            "name": "effect_length",
+            "title": {
+              "en": "Effect Length (in milliseconds)",
+              "de": "Länge des Effekts (in Millisekunden)"
+            },
+            "min": 100,
+            "max": 5000,
+            "step": 10,
+            "label": {
+              "en": "ms",
+              "de": "ms"
+            }
+          },
+          {
+            "type": "color",
+            "name": "effect_color",
+            "title": {
+              "en": "Effect Color",
+              "de": "Farbe des Effekts"
+            }
+          }
+        ]
+      },
+      {
+        "id": "play_effect_pulse",
+        "title": {
+          "en": "Play Effect: Pulse",
+          "de": "Spiele Effekt: Pulsieren"
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2&capabilities=light_hue"
+          },
+          {
+            "type": "dropdown",
+            "name": "effect_trans",
+            "title": {
+              "en": "Keep Effect Color? (after playing)",
+              "de": "Farbe des Effekts beibehalten? (nach dem Abspielen)"
+            },
+            "values": [
+              {
+                "id": "Yes",
+                "label": {
+                  "en": "No",
+                  "de": "Nein"
+                }
+              },
+              {
+                "id": "No",
+                "label": {
+                  "en": "Yes",
+                  "de": "Ja"
+                }
+              }
+            ]
+          },
+          {
+            "type": "number",
+            "name": "repeats",
+            "title": {
+              "en": "Number Of Repetitions",
+              "de": "Anzahl der Wiederholungen"
+            },
+            "min": 1,
+            "max": 10,
+            "step": 1
+          },
+          {
+            "type": "number",
+            "name": "effect_length",
+            "title": {
+              "en": "Effect Length (in milliseconds)",
+              "de": "Länge des Effekts (in Millisekunden)"
+            },
+            "min": 100,
+            "max": 5000,
+            "step": 10,
+            "label": {
+              "en": "ms",
+              "de": "ms"
+            }
+          },
+          {
+            "type": "number",
+            "name": "effect_skew",
+            "title": {
+              "en": "Skewing Ratio (Percentage as 0.1 - 0.9)",
+              "de": "Schräglaufverhältnis (Prozentual als 0.1 - 0.9)"
+            },
+            "min": 0.1,
+            "max": 0.9,
+            "step": 0.1
+          },
+          {
+            "type": "color",
+            "name": "effect_color",
+            "title": {
+              "en": "Effect Color",
+              "de": "Farbe des Effekts"
+            }
+          }
+        ]
+      },
+      {
+        "id": "activate_scene",
+        "duration": true,
+        "title": {
+          "en": "Activate a Scene",
+          "de": "Szene aktivieren"
+        },
+        "hint": {
+          "en": "This card requires the LIFX cloud api token be set in your app settings.",
+          "de": "Zum nutzen dieser Karte muss der LIFX cloud api token in den App Einstellungen gesetzt sein."
+        },
+        "args": [
+          {
+            "name": "scene",
+            "title": {
+              "en": "Scene",
+              "de": "Szene"
+            },
+            "type": "autocomplete"
+          },
+          {
+            "type": "dropdown",
+            "name": "turn_on",
+            "title": {
+              "en": "Turn lights on if they are off",
+              "de": "Lichter einschalten falls ausgeschaltet"
+            },
+            "values": [
+              {
+                "id": "Yes",
+                "label": {
+                  "en": "Yes",
+                  "de": "Ja"
+                }
+              },
+              {
+                "id": "No",
+                "label": {
+                  "en": "No",
+                  "de": "Nein"
+                }
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "name": "ignore_infrared",
+            "title": {
+              "en": "Ignore infrared settings",
+              "de": "Infrarot Einstellungen ignorieren"
+            },
+            "values": [
+              {
+                "id": "Yes",
+                "label": {
+                  "en": "Yes",
+                  "de": "Ja"
+                }
+              },
+              {
+                "id": "No",
+                "label": {
+                  "en": "No",
+                  "de": "Nein"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "set_lights_color_in_scene",
+        "duration": true,
+        "title": {
+          "en": "Set color of lights in scene",
+          "de": "Farbe der Lichter in Szene ändern"
+        },
+        "hint": {
+          "en": "This card requires the LIFX cloud api token be set in your app settings.",
+          "de": "Zum nutzen dieser Karte muss der LIFX cloud api token in den App Einstellungen gesetzt sein."
+        },
+        "args": [
+          {
+            "name": "scene",
+            "title": {
+              "en": "Scene",
+              "de": "Szene"
+            },
+            "type": "autocomplete"
+          },
+          {
+            "type": "dropdown",
+            "name": "turn_on",
+            "title": {
+              "en": "Turn lights on if they are off",
+              "de": "Lichter einschalten falls ausgeschaltet"
+            },
+            "values": [
+              {
+                "id": "Yes",
+                "label": {
+                  "en": "Yes",
+                  "de": "Ja"
+                }
+              },
+              {
+                "id": "No",
+                "label": {
+                  "en": "No",
+                  "de": "Nein"
+                }
+              }
+            ]
+          },
+          {
+            "type": "color",
+            "name": "light_color",
+            "title": {
+              "en": "Color to set",
+              "de": "Farbe setzen"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set_lights_brightness_in_scene",
+        "duration": true,
+        "title": {
+          "en": "Set brigthness of lights in scene",
+          "de": "Helligkeit der Lichter in Szene ändern"
+        },
+        "hint": {
+          "en": "This card requires the LIFX cloud api token be set in your app settings.",
+          "de": "Zum nutzen dieser Karte muss der LIFX cloud api token in den App Einstellungen gesetzt sein."
+        },
+        "args": [
+          {
+            "name": "scene",
+            "title": {
+              "en": "Scene",
+              "de": "Szene"
+            },
+            "type": "autocomplete"
+          },
+          {
+            "type": "dropdown",
+            "name": "turn_on",
+            "title": {
+              "en": "Turn lights on if they are off",
+              "de": "Lichter einschalten falls ausgeschaltet"
+            },
+            "values": [
+              {
+                "id": "Yes",
+                "label": {
+                  "en": "Yes",
+                  "de": "Ja"
+                }
+              },
+              {
+                "id": "No",
+                "label": {
+                  "en": "No",
+                  "de": "Nein"
+                }
+              }
+            ]
+          },
+          {
+            "type": "range",
+            "name": "new_brightness",
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "label": "%",
+            "labelMultiplier": 100,
+            "labelDecimals": 0
+          }
+        ]
+      },
+      {
+        "id": "deactivate_scene",
+        "duration": true,
+        "title": {
+          "en": "Turn Off Lights in Scene",
+          "de": "Lichter in Szene abschalten"
+        },
+        "hint": {
+          "en": "This card requires the LIFX cloud api token be set in your app settings.",
+          "de": "Zum nutzen dieser Karte muss der LIFX cloud api token in den App Einstellungen gesetzt sein."
+        },
+        "args": [
+          {
+            "name": "scene",
+            "title": {
+              "en": "Scene",
+              "de": "Szene"
+            },
+            "type": "autocomplete"
+          }
+        ]
+      },
+      {
+        "id": "activate_lights_in_scene",
+        "duration": true,
+        "title": {
+          "en": "Turn On Lights in Scene",
+          "de": "Lichter in Szene einschalten"
+        },
+        "hint": {
+          "en": "This card requires the LIFX cloud api token be set in your app settings.",
+          "de": "Zum nutzen dieser Karte muss der LIFX cloud api token in den App Einstellungen gesetzt sein."
+        },
+        "args": [
+          {
+            "name": "scene",
+            "title": {
+              "en": "Scene",
+              "de": "Szene"
+            },
+            "type": "autocomplete"
+          }
+        ]
+      },
+      {
+        "id": "activate_tile_flame",
+        "duration": false,
+        "title": {
+          "en": "Play Effect: Flame",
+          "de": "Spiele Effekt: Flammen"
+        },
+        "hint": {
+          "en": "This card requires the LIFX cloud api token be set in your app settings.",
+          "de": "Zum nutzen dieser Karte muss der LIFX cloud api token in den App Einstellungen gesetzt sein."
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2&capabilities=chain_device"
+          },
+          {
+            "type": "dropdown",
+            "name": "turn_on",
+            "title": {
+              "en": "Turn light on if it is turned off",
+              "de": "Licht einschalten falls es ausgeschaltet ist"
+            },
+            "values": [
+              {
+                "id": "Yes",
+                "label": {
+                  "en": "Yes",
+                  "de": "Ja"
+                }
+              },
+              {
+                "id": "No",
+                "label": {
+                  "en": "No",
+                  "de": "Nein"
+                }
+              }
+            ]
+          },
+          {
+            "type": "number",
+            "name": "effect_speed",
+            "title": {
+              "en": "Speed of the effect in seconds (lower value means faster)",
+              "de": "Geschwindigkeit des Effects in Sekunden (kleinerer Wert bedeuted schneller)"
+            },
+            "min": 1,
+            "max": 60,
+            "step": 1,
+            "label": {
+              "en": "s",
+              "de": "s"
+            }
+          }
+        ]
+      },
+      {
+        "id": "activate_tile_morph",
+        "duration": false,
+        "title": {
+          "en": "Play Effect: Morph",
+          "de": "Spiele Effekt: Morphen"
+        },
+        "hint": {
+          "en": "This card requires the LIFX cloud api token be set in your app settings.",
+          "de": "Zum nutzen dieser Karte muss der LIFX cloud api token in den App Einstellungen gesetzt sein."
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2&capabilities=chain_device"
+          },
+          {
+            "type": "dropdown",
+            "name": "turn_on",
+            "title": {
+              "en": "Turn light on if it is turned off",
+              "de": "Licht einschalten falls es ausgeschaltet ist"
+            },
+            "values": [
+              {
+                "id": "Yes",
+                "label": {
+                  "en": "Yes",
+                  "de": "Ja"
+                }
+              },
+              {
+                "id": "No",
+                "label": {
+                  "en": "No",
+                  "de": "Nein"
+                }
+              }
+            ]
+          },
+          {
+            "type": "number",
+            "name": "effect_speed",
+            "title": {
+              "en": "Speed of the effect in seconds (lower value means faster)",
+              "de": "Geschwindigkeit des Effects in Sekunden (kleinerer Wert bedeuted schneller)"
+            },
+            "min": 1,
+            "max": 60,
+            "step": 1,
+            "label": {
+              "en": "s",
+              "de": "s"
+            }
+          },
+          {
+            "type": "color",
+            "name": "effect_color1",
+            "title": {
+              "en": "Effect Color 1",
+              "de": "1te Farbe des Effekts"
+            }
+          },
+          {
+            "type": "color",
+            "name": "effect_color2",
+            "title": {
+              "en": "Effect Color 2",
+              "de": "2te Farbe des Effekts"
+            }
+          },
+          {
+            "type": "color",
+            "name": "effect_color3",
+            "title": {
+              "en": "Effect Color 3",
+              "de": "3te Farbe des Effekts"
+            }
+          },
+          {
+            "type": "color",
+            "name": "effect_color4",
+            "title": {
+              "en": "Effect Color 4",
+              "de": "4te Farbe des Effekts"
+            }
+          },
+          {
+            "type": "color",
+            "name": "effect_color5",
+            "title": {
+              "en": "Effect Color 5",
+              "de": "5te Farbe des Effekts"
+            }
+          },
+          {
+            "type": "color",
+            "name": "effect_color6",
+            "title": {
+              "en": "Effect Color 6",
+              "de": "6te Farbe des Effekts"
+            }
+          },
+          {
+            "type": "color",
+            "name": "effect_color7",
+            "title": {
+              "en": "Effect Color 7",
+              "de": "7te Farbe des Effekts"
+            }
+          }
+        ]
+      },
+      {
+        "id": "stop_chain_effect",
+        "duration": false,
+        "title": {
+          "en": "Stop Any Endless Effect",
+          "de": "Endlosen Effekt abschalten"
+        },
+        "hint": {
+          "en": "This card requires the LIFX cloud api token be set in your app settings.",
+          "de": "Zum nutzen dieser Karte muss der LIFX cloud api token in den App Einstellungen gesetzt sein."
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=lifxv2&capabilities=chain_device"
+          },
+          {
+            "type": "dropdown",
+            "name": "turn_off",
+            "title": {
+              "en": "Turn light off as well",
+              "de": "Licht auch ausschalten"
+            },
+            "values": [
+              {
+                "id": "Yes",
+                "label": {
+                  "en": "Yes",
+                  "de": "Ja"
+                }
+              },
+              {
+                "id": "No",
+                "label": {
+                  "en": "No",
+                  "de": "Nein"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "capabilities": {
+    "infrared_max_level": {
+      "type": "number",
+      "title": {
+        "en": "Maximum Infrared Intensity",
+        "de": "Infrarot Maximalwert"
+      },
+      "uiComponent": "slider",
+      "getable": true,
+      "setable": true,
+      "units": {
+        "en": "%",
+        "de": "%"
+      },
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    "multiple_zones": {
+      "type": "number",
+      "title": {
+        "en": "Multizone Capability Present",
+        "de": "Multizonen Fähigkeit verfügbar"
+      },
+      "uiComponent": null,
+      "getable": false,
+      "setable": false
+    },
+    "chain_device": {
+      "type": "number",
+      "title": {
+        "en": "Is a chain device",
+        "de": "Ist ein verkettungs device"
+      },
+      "uiComponent": null,
+      "getable": false,
+      "setable": false
+    },
+    "current_ambient_flux": {
+      "type": "number",
+      "title": {
+        "en": "Current Ambient Light (In Flux)",
+        "de": "Aktueller Umgebungslicht Wert (In Flux)"
+      },
+      "icon": "/assets/lamp.svg",
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "lm",
+        "de": "lm"
+      },
+      "min": 0,
+      "max": 400000
+    }
+  },
+  "drivers": [
+    {
+      "id": "lifxv2",
+      "name": {
+        "en": "LIFX Light",
+        "de": "LIFX Licht"
+      },
+      "class": "light",
+      "capabilities": [
+        "light_saturation",
+        "light_temperature",
+        "dim",
+        "light_hue",
+        "onoff",
+        "light_mode",
+        "infrared_max_level",
+        "current_ambient_flux",
+        "multiple_zones",
+        "chain_device"
+      ],
+      "capabilitiesOptions": {
+        "light_saturation": {
+          "duration": 1000
+        },
+        "light_temperature": {
+          "duration": 1000
+        },
+        "dim": {
+          "duration": 1000
+        },
+        "light_hue": {
+          "light_hue": 1000
+        },
+        "onoff": {
+          "duration": 1000
+        }
+      },
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Additional Data",
+            "de": "Zusätzliche Daten"
+          },
+          "children": [
+            {
+              "id": "zonesCount",
+              "type": "text",
+              "label": {
+                "en": "Number of Zones",
+                "de": "Anzahl der Zonen"
+              },
+              "value": "-"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Hardware Details",
+            "de": "Hardware Details"
+          },
+          "children": [
+            {
+              "id": "vendorName",
+              "type": "text",
+              "label": {
+                "en": "Vendor",
+                "de": "Hersteller"
+              },
+              "value": "?"
+            },
+            {
+              "id": "productName",
+              "type": "text",
+              "label": {
+                "en": "Product",
+                "de": "Produkt"
+              },
+              "value": "?"
+            },
+            {
+              "id": "version",
+              "type": "number",
+              "label": {
+                "en": "Version",
+                "de": "Version"
+              },
+              "value": 0
+            },
+            {
+              "id": "vendorId",
+              "type": "number",
+              "label": {
+                "en": "Vendor ID",
+                "de": "Hersteller ID"
+              },
+              "value": 0
+            },
+            {
+              "id": "productId",
+              "type": "number",
+              "label": {
+                "en": "Product ID",
+                "de": "Produkt ID"
+              },
+              "value": 0
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Firmware Details",
+            "de": "Firmware Details"
+          },
+          "children": [
+            {
+              "id": "majorVersion",
+              "type": "number",
+              "label": {
+                "en": "Major Version",
+                "de": "Hauptversion"
+              },
+              "value": 0
+            },
+            {
+              "id": "minorVersion",
+              "type": "number",
+              "label": {
+                "en": "Minor Version",
+                "de": "Unterversion"
+              },
+              "value": 0
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Wifi Firmware Details",
+            "de": "Wifi Firmware Details"
+          },
+          "children": [
+            {
+              "id": "wifi_majorVersion",
+              "type": "text",
+              "label": {
+                "en": "Major Version",
+                "de": "Hauptversion"
+              },
+              "value": "-"
+            },
+            {
+              "id": "wifi_minorVersion",
+              "type": "text",
+              "label": {
+                "en": "Minor Version",
+                "de": "Unterversion"
+              },
+              "value": "-"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Capabillity Details",
+            "de": "Fähigkeiten Details"
+          },
+          "children": [
+            {
+              "id": "tempMax",
+              "type": "number",
+              "label": {
+                "en": "Kelvin Max",
+                "de": "Maximale Lichttemperatur"
+              },
+              "value": 9000
+            },
+            {
+              "id": "tempMin",
+              "type": "number",
+              "label": {
+                "en": "Kelvin Min",
+                "de": "Minimale Lichttemperatur"
+              },
+              "value": 1500
+            },
+            {
+              "id": "supportColor",
+              "type": "checkbox",
+              "label": {
+                "en": "Supports Color Mode",
+                "de": "Unterstützt Farbmodus"
+              },
+              "value": false
+            },
+            {
+              "id": "supportInfrared",
+              "type": "checkbox",
+              "label": {
+                "en": "Supports Infrared",
+                "de": "Unterstützt Infrarot"
+              },
+              "value": false
+            },
+            {
+              "id": "supportMultiZone",
+              "type": "checkbox",
+              "label": {
+                "en": "Supports Multizone",
+                "de": "Unterstützt Zonen"
+              },
+              "value": false
+            },
+            {
+              "id": "supportChain",
+              "type": "checkbox",
+              "label": {
+                "en": "Supports Chain",
+                "de": "Unterstützt Verkettung"
+              },
+              "value": false
+            }
+          ]
+        }
+      ],
+      "images": {
+        "large": "/drivers/lifxv2/assets/images/large.png",
+        "small": "/drivers/lifxv2/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          },
+          "options": {
+            "singular": false
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    }
+  ]
+}

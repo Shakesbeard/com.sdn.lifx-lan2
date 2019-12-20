@@ -1,0 +1,47 @@
+{
+  "settings": {
+    "title": "LIFX Settings",
+    "globals": "Global Settings",
+    "theseRequireRestart": "These settings require an app restart",
+    "statePollingInterval": "State Polling Interval (Default: 10000ms)",
+    "saveSettings": "Save Settings",
+    "defaultTransitionDuration": "Default Transition Duration (Default: 500ms)",
+    "directSettings": "Common Settings",
+    "errorPollingValue": "State Polling Interval must be a number between 5000 and 60000!",
+    "errorDurationValue": "Default Transition Duration must be a number!",
+    "infoSettingsSaved": "Settings saved.",
+    "loggingInfoEnabled": "Log info messages (used for debugging only)",
+    "loggingErrorEnabled": "Log error messages (used for debugging only)",
+    "deviceList": "Device List (refreshes every 10s)",
+    "deviceName": "Name",
+    "deviceProduct": "Product",
+    "deviceID": "ID",
+    "deviceIP": "IP",
+    "deviceWifi": "Wifi Signal",
+    "cloudApiToken": "Your LIFX developer token to enable cloud support",
+    "cloudApiTokenInfo": "Click here to create this token in your LIFX account settings"
+  },
+  "inAppErrors": {
+    "deviceOffline": "Light disconnected/offline!",
+    "waitOnInitComplete": "Waiting on light init completion..",
+    "waitOnDevice": "Waiting on light..",
+    "dataNotAvailable": "No Data Available",
+    "cloudApiTokenNeeded": "You need to add your auth token in the app settings first!",
+    "advSettingsReadOnly": "The device details are read-only!",
+    "zoneCodeError": "Zone Code seems to be incorrect!",
+    "hexColorError": "Something seems wrong with your rgb hex code!"
+  },
+  "defaultValues": {
+    "noName": "No Name"
+  },
+  "cloudSupport": {
+    "invalidArray": "Invalid Response, Expected Array"
+  },
+  "wifi": {
+    "veryBadSignal": "Very Bad",
+    "somewhatBadSignal": "Somewhat Bad",
+    "alrightSignal": "Alright",
+    "goodSignal": "Good",
+    "noSignal": "No Signal"
+  }
+}

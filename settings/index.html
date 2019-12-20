@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+    <head>
+	    <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+    </head>
+    <body>
+        <h1 data-i18n="settings.title"></h1>
+        <p data-i18n="settings.globals"></p>
+        <fieldset>
+            <legend data-i18n="settings.theseRequireRestart"></legend>
+            <div class="field row">
+                <label for="statePollingInterval" data-i18n="settings.statePollingInterval"></label>
+                <input id="statePollingInterval" type="number" value="" />
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend data-i18n="settings.directSettings"></legend>
+            <div class="field row">
+                <label for="cloudApiToken" data-i18n="settings.cloudApiToken"></label>
+                <input id="cloudApiToken" type="password" value="" />
+                <div style="font-size:xx-small;">
+                  <a href="https://cloud.lifx.com/settings" target="_blank" data-i18n="settings.cloudApiTokenInfo"></a>
+                </div>
+            </div>
+            <div class="field row">
+                <label for="defaultTransitionDuration" data-i18n="settings.defaultTransitionDuration"></label>
+                <input id="defaultTransitionDuration" type="number" value="" />
+            </div>
+            <div class="field row" align="right">
+                <label for="loggingInfoEnabled" data-i18n="settings.loggingInfoEnabled"></label>
+                <input id="loggingInfoEnabled" type="checkbox" />
+            </div>
+            <div class="field row" align="right">
+                <label for="loggingErrorEnabled" data-i18n="settings.loggingErrorEnabled"></label>
+                <input id="loggingErrorEnabled" type="checkbox" />
+            </div>
+        </fieldset>
+        <fieldset>
+          <div class="field row" align="right">
+            <button id="save" class="right" data-i18n="settings.saveSettings"></button>
+          </div>
+        </fieldset>
+        <fieldset>
+            <legend data-i18n="settings.deviceList"></legend>
+            <div class="field row; table-layout:auto;">
+              <table style="width=100%; font-size:xx-small;" id="deviceTable">
+                <tr style="width:100%;">
+                  <th onclick="sortTable('deviceTable', 0)" data-i18n="settings.deviceName" style="width:20%;"></th>
+                  <th onclick="sortTable('deviceTable', 1)" data-i18n="settings.deviceProduct" style="width:20%;"></th>
+                  <th onclick="sortTable('deviceTable', 2)" data-i18n="settings.deviceID" style="width:20%;"></th>
+                  <th onclick="sortTable('deviceTable', 3)" data-i18n="settings.deviceIP" style="width:20%;"></th>
+                  <th onclick="sortTable('deviceTable', 4)" data-i18n="settings.deviceWifi" style="width:20%;"></th>
+                </tr>
+              </table>
+            </div>
+        </fieldset>
+        <script type="text/javascript">
+        function sortTable(tableName, n) {
+          var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+          table = document.getElementById(tableName);
+          switching = true;
+          // Set the sorting direction to ascending:
+          dir = "asc";
+          /* Make a loop that will continue until
+          no switching has been done: */
+          while (switching) {
+            // Start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            /* Loop through all table rows (except the
+            first, which contains table headers): */
+            for (i = 1; i < (rows.length - 1); i++) {
+              // Start by saying there should be no switching:
+              shouldSwitch = false;
+              /* Get the two elements you want to compare,
+              one from current row and one from the next: */
+              x = rows[i].getElementsByTagName("TD")[n];
+              y = rows[i + 1].getElementsByTagName("TD")[n];
+              /* Check if the two rows should switch place,
+              based on the direction, asc or desc: */
+              if (dir == "asc") {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                  // If so, mark as a switch and break the loop:
+                  shouldSwitch = true;
+                  break;
+                }
+              } else if (dir == "desc") {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                  // If so, mark as a switch and break the loop:
+                  shouldSwitch = true;
+                  break;
+                }
+              }
+            }
+            if (shouldSwitch) {
+              /* If a switch has been marked, make the switch
+              and mark that a switch has been done: */
+              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+              switching = true;
+              // Each time a switch is done, increase this count by 1:
+              switchcount ++;
+            } else {
+              /* If no switching has been done AND the direction is "asc",
+              set the direction to "desc" and run the while loop again. */
+              if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+              }
+            }
+          }
+        }
+        function refreshDeviceList(){
+          var deviceTable = document.getElementById('deviceTable');
+          Homey.api('GET', '/getDeviceList', null, function( err, deviceInfoArray ) {
+            if( err ) return Homey.alert( err );
+            deviceInfoArray.forEach(function (device) {
+              var findRow = document.getElementById(device.data.id);
+              if (findRow) {
+                findRow.cells[0].innerHTML = device.data.name;
+                findRow.cells[1].innerHTML = device.data.product;
+                findRow.cells[2].innerHTML = device.data.id;
+                findRow.cells[3].innerHTML = device.data.ip;
+                findRow.cells[4].innerHTML = device.data.wifi;
+              } else {
+                var newRow = deviceTable.insertRow(1);
+                newRow.id = device.data.id;
+                var cellName = newRow.insertCell(0);
+                cellName.innerHTML = device.data.name;
+                var cellProduct = newRow.insertCell(1);
+                cellProduct.innerHTML = device.data.product;
+                var cellID = newRow.insertCell(2);
+                cellID.innerHTML = device.data.id;
+                var cellIP = newRow.insertCell(3);
+                cellIP.innerHTML = device.data.ip;
+                var cellWifi = newRow.insertCell(4);
+                cellWifi.innerHTML = device.data.wifi;
+              }
+            });
+          });
+        }
+        function onHomeyReady( Homey ){
+          refreshDeviceList();
+          sortTable('deviceTable', 0);
+          var deviceListRefreshTimer = setInterval(function () {
+            refreshDeviceList();
+          }, 5000);
+
+          var cloudApiTokenElement = document.getElementById('cloudApiToken');
+          var statePollingIntervalElement = document.getElementById('statePollingInterval');
+          var defaultTransitionDurationElement = document.getElementById('defaultTransitionDuration');
+          var loggingInfoEnabledElement = document.getElementById('loggingInfoEnabled');
+          var loggingErrorEnabledElement = document.getElementById('loggingErrorEnabled');
+          var saveElement = document.getElementById('save');
+
+          Homey.get('cloudApiToken', function( err, cloudApiToken ) {
+            if( err ) return Homey.alert( err );
+            cloudApiTokenElement.value = cloudApiToken;
+          });
+
+          Homey.get('loggingInfoEnabled', function( err, loggingInfoEnabled ) {
+            if( err ) return Homey.alert( err );
+            loggingInfoEnabledElement.checked = loggingInfoEnabled;
+          });
+
+          Homey.get('loggingErrorEnabled', function( err, loggingErrorEnabled ) {
+            if( err ) return Homey.alert( err );
+            loggingErrorEnabledElement.checked = loggingErrorEnabled;
+          });
+
+          Homey.get('statePollingInterval', function( err, statePollingInterval ) {
+           if( err ) return Homey.alert( err );
+		       statePollingIntervalElement.value = statePollingInterval;
+	        });
+
+          Homey.get('defaultTransitionDuration', function( err, defaultTransitionDuration ) {
+	         if( err ) return Homey.alert( err );
+			     defaultTransitionDurationElement.value = defaultTransitionDuration;
+	        });
+
+	        saveElement.addEventListener('click', function(e) {
+            var Polling = parseInt(statePollingIntervalElement.value);
+            if (isNaN(Polling)) {
+              Homey.alert(Homey.__("settings.errorPollingValue"), 'error');
+              return;
+            } else if (Polling < 5000 || Polling > 60000) {
+              Homey.alert(Homey.__("settings.errorPollingValue"), 'error');
+              return;
+            }
+            var Duration = parseInt(defaultTransitionDurationElement.value);
+            if (isNaN(Duration)) {
+              Homey.alert(Homey.__("settings.errorDurationValue"), 'error');
+              return;
+            }
+            Homey.set('loggingInfoEnabled', loggingInfoEnabledElement.checked, function( err ){
+		          if( err ) return Homey.alert( err );
+	          });
+            Homey.set('loggingErrorEnabled', loggingErrorEnabledElement.checked, function( err ){
+		          if( err ) return Homey.alert( err );
+	          });
+            Homey.set('statePollingInterval', statePollingIntervalElement.value, function( err ){
+		          if( err ) return Homey.alert( err );
+	          });
+            Homey.set('statePollingInterval', statePollingIntervalElement.value, function( err ){
+		          if( err ) return Homey.alert( err );
+	          });
+	          Homey.set('defaultTransitionDuration', defaultTransitionDurationElement.value, function( err ){
+		          if( err ) return Homey.alert( err );
+	          });
+            Homey.set('cloudApiToken', cloudApiTokenElement.value, function( err ){
+		          if( err ) return Homey.alert( err );
+	          });
+
+            Homey.alert(Homey.__("settings.infoSettingsSaved"), 'info');
+	        });
+          // Tell Homey we're ready to be displayed
+          Homey.ready();
+        }
+        </script>
+    </body>
+</html>

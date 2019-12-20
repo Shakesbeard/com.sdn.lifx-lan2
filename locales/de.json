@@ -1,0 +1,47 @@
+{
+  "settings": {
+    "title": "LIFX Einstellungen",
+    "globals": "Globale Einstellungen",
+    "theseRequireRestart": "Diese Einstellungen benötigen einen Neustart der Anwendung",
+    "statePollingInterval": "Status Update Abfragezyklus (Standard: 10000ms)",
+    "saveSettings": "Einstellungen Speichern",
+    "defaultTransitionDuration": "Standard Übergangszeit (Standard: 500ms)",
+    "directSettings": "Allgemeine Einstellungen",
+    "errorPollingValue": "Status Update Abfragezyklus muss eine Zahl zwischen 5000 und 60000 sein!",
+    "errorDurationValue": "Standard Übergangszeit muss eine Zahl sein!",
+    "infoSettingsSaved": "Einstellungen gespeichert.",
+    "loggingInfoEnabled": "Protokolliere Info Nachrichten (nur für Debugging)",
+    "loggingErrorEnabled": "Protokolliere Fehler Nachrichten (nur für Debugging)",
+    "deviceList": "Geräte Liste (wird alle 10s aktualisiert)",
+    "deviceName": "Name",
+    "deviceProduct": "Produkt",
+    "deviceID": "ID",
+    "deviceIP": "IP",
+    "deviceWifi": "Wifi Signal",
+    "cloudApiToken": "Dein LIFX Entwickler Token um Cloud Support zu aktivieren",
+    "cloudApiTokenInfo": "Hier klicken um den Token in deinen LIFX Account Einstellungen zu erzeugen"
+  },
+  "inAppErrors": {
+    "deviceOffline": "Licht getrennt/offline!",
+    "waitOnInitComplete": "Warte auf Abschluss der Initialisierung..",
+    "waitOnDevice": "Warte auf Licht..",
+    "dataNotAvailable": "Keine Daten Verfügbar",
+    "cloudApiTokenNeeded": "Es ist kein Cloud API Token in den App Einstellungen gesetzt!",
+    "advSettingsReadOnly": "Die Gerätedetails können nicht geändert werden!",
+    "zoneCodeError": "Der Zonen Code scheint fehlerhaft zu sein!",
+    "hexColorError": "Etwas scheint mit dem RGB Hex Code nicht zu stimmen!"
+  },
+  "defaultValues": {
+    "noName": "Kein Name"
+  },
+  "cloudSupport": {
+    "invalidArray": "Ungültige Antwort, Erwarte Aufzählung"
+  },
+  "wifi": {
+    "veryBadSignal": "Sehr Schlecht",
+    "somewhatBadSignal": "Etwas Schlecht",
+    "alrightSignal": "Ganz Okay",
+    "goodSignal": "Gut",
+    "noSignal": "Kein Signal"
+  }
+}
