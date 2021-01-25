@@ -1,7 +1,7 @@
 # LIFX LANv2
 
 Adds local network support for LIFX devices to Homey.
-Homey is a product from Athom: https://homey.app
+Homey is a product by Athom: https://homey.app
 
 ## Note
 This GitHub project is no longer maintained for the time being. The code on this site is severely outdated.
